@@ -1,0 +1,6 @@
+{
+  "name": "Flight Delay Prediction System",
+  "description": "Production-grade flight delay prediction system powered by classical machine learning ensembles, SHAP explainability, interactive 3D airport operations visualization, and flight analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
