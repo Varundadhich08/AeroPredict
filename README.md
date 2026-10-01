@@ -1,78 +1,70 @@
-# AeroPredict™ — Flight Delay Prediction System
+# VictoryVendor
 
-A production-grade, classical machine learning web application engineered for airline operations centers, flight dispatchers, and aviation analysts.
+Vendored dependencies for Victory.
 
-> **Pure Classical Machine Learning**: Built strictly using statistical machine learning algorithms (XGBoost, Random Forest, LightGBM, CatBoost, Logistic Regression, Linear Ridge Regression) and game-theoretic TreeSHAP feature attribution. Zero Generative AI or LLMs.
+## Background
 
----
+D3 has released most of its libraries as ESM-only. This means that consumers in Node.js applications can no longer just `require()` anything with a d3 transitive dependency, including much of Victory.
 
-## 🛫 Key Features & Architecture
+To help provide an easy path to folks still using CommonJS in their Node.js applications that consume Victory, we now provide this package to vendor in various d3-related packages.
 
-1. **Cinematic 3D Airport & Avionics Atmosphere**:
-   - High-performance Three.js runway rendering with CAT-III ILS centerline strobe sequences, approach lighting systems, illuminated taxiways, and terminal beacons.
-   - Live animated aircraft taking off with climb trajectories, landing glide slopes, and taxiing maneuvers.
-   - Procedural Web Audio API airport ambience synthesizer (subtle jet engine turbine hum, airport ding-dong chime, ATC radio chatter).
-   - Air Traffic Control primary surveillance radar scope with real-time sweep dynamics.
+## Packages
 
-2. **Flight Telemetry Auto-Lookup & Meteorological Ingestion**:
-   - Instant flight search (`AI302`, `6E541`, `EK502`, `QR101`, `DL221`, `AA440`, `BA117`, `SQ321`, `AF006`, `LH400`, `QF1`, `UA880`, etc.).
-   - Automatically populates Airline, Origin Airport, Destination Airport, Scheduled Time, Distance, and Aircraft Type.
-   - Comprehensive weather simulation presets (Severe Thunderstorm, Winter Blizzard, Low Visibility Fog, Crosswind Gale, Clear Aviation VFR) and manual METAR controls.
+We presently provide the following top-level libraries:
+<!-- cat packages/victory-vendor/package.json | egrep '"d3-' | egrep -o 'd3-[^"]*'| sor t-->
 
-3. **Inference Pipeline & Cinematic Takeoff Loading Screen**:
-   - Jet acceleration animation, runway strobe sequence, and live multi-stage inference progress reporting.
+- d3-ease
+- d3-interpolate
+- d3-scale
+- d3-shape
+- d3-timer
 
-4. **Airline Operations Center Dashboard**:
-   - **Prediction Hero Card**: Delay Probability radial gauge, Status badge (`DELAYED`, `ON TIME`, `MINOR DELAY`), Expected Delay Minutes with 95% Confidence Interval, and Model Confidence score.
-   - **Primary Driver Cards**: Heavy Rain, Peak Hour, Airport Congestion, High Wind, and Carrier Reliability.
-   - **Explainable AI (SHAP Waterfall)**: Precise additive Shapley game-theoretic contributions ($\phi_i$) for each meteorological and operational feature.
-   - **Interactive World Airport Map**: Great-circle geodesic flight trajectory with animated aircraft icon moving from origin to destination.
-   - **Operations Timeline**: Step-by-step dispatch milestones (Scheduled Gate Departure ➔ Taxi-Out ➔ Wheels Up ➔ Enroute Cruise ➔ Wheels Down ➔ Taxi-In ➔ Gate Arrival).
-   - **Multi-Model Benchmark Suite**: Side-by-side performance metrics across 6 classification models and 4 regression models, with interactive 2x2 Confusion Matrix and ROC Curve.
-   - **Real-Time What-If Sensitivity Simulator**: Instant re-inference as users manipulate weather and traffic sliders on the fly.
-   - **Historical Analytics**: Monthly and hourly delay trends, airport rankings, carrier reliability, and Pearson correlation matrices.
-   - **CSV Export & PDF Dispatch Report**: Export prediction records to CSV or print official flight dispatch sheets.
+This is the total list of top and transitive libraries we vendor:
+<!-- ls packages/victory-vendor/lib-vendor | sort -->
 
----
+- d3-array
+- d3-color
+- d3-ease
+- d3-format
+- d3-interpolate
+- d3-path
+- d3-scale
+- d3-shape
+- d3-time
+- d3-time-format
+- d3-timer
+- internmap
 
-## 🧠 Machine Learning Formulation & Models
+Note that this does _not_ include the following D3 libraries that still support CommonJS:
 
-### Classification Models (Delay $\ge 15$ min)
-- **XGBoost Classifier (Tuned)**: 94.2% Accuracy, 0.968 ROC-AUC
-- **LightGBM Gradient Booster**: 93.8% Accuracy, 0.964 ROC-AUC
-- **CatBoost Classifier**: 93.9% Accuracy, 0.965 ROC-AUC
-- **Random Forest (500 Trees)**: 92.1% Accuracy, 0.951 ROC-AUC
-- **Decision Tree (CART Gini)**: 84.6% Accuracy
-- **Logistic Regression (L2 Regularized)**: 81.9% Accuracy
+- d3-voronoi
 
-### Regression Models (Continuous Delay Minutes)
-- **XGBoost Regressor**: RMSE 6.42 min, MAE ±4.18 min, $R^2 = 0.912$
-- **Gradient Boosting Regressor**: RMSE 6.89 min, MAE ±4.52 min, $R^2 = 0.898$
-- **Random Forest Regressor**: RMSE 7.24 min, MAE ±4.88 min, $R^2 = 0.884$
-- **Linear Ridge Regression**: RMSE 11.60 min, MAE ±8.35 min, $R^2 = 0.742$
+## How it works
 
-### TreeSHAP Game-Theoretic Formulation
-$$\phi_i(v) = \sum_{S \subseteq N \setminus \{i\}} \frac{|S|!(|N|-|S|-1)!}{|N|!} \left[ v(S \cup \{i\}) - v(S) \right]$$
+We provide two alternate paths and behaviors -- for ESM and CommonJS
 
----
+### ESM
 
-## 🛠️ Tech Stack
+If you do a Node.js import like:
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Motion, Three.js, Recharts, Lucide Icons
-- **ML & Mathematics**: Pure Classical Machine Learning Algorithms & TreeSHAP mathematical models in TypeScript
-- **Audio Engine**: Procedural Web Audio API sound synthesis
-
----
-
-## 🚀 Running Locally
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server on port 3000
-npm run dev
-
-# Build for production
-npm run build
+```js
+import { interpolate } from "victory-vendor/d3-interpolate";
 ```
+
+under the hood it's going to just re-export and pass you through to `node_modules/d3-interpolate`, the **real** ESM library from D3.
+
+### CommonJS
+
+If you do a Node.js import like:
+
+```js
+const { interpolate } = require("victory-vendor/d3-interpolate");
+```
+
+under the hood it's going to will go to an alternate path that contains the transpiled version of the underlying d3 library to be found at `victory-vendor/lib-vendor/d3-interpolate/**/*.js`. This futher has internally consistent import references to other `victory-vendor/lib-vendor/<pkg-name>` paths.
+
+Note that for some tooling (like Jest) that doesn't play well with `package.json:exports` routing to this CommonJS path, we **also** output a root file in the form of `victory-vendor/d3-interpolate.js`.
+
+## Licenses
+
+This project is released under the MIT license, but the vendor'ed in libraries include other licenses (e.g. ISC) that we enumerate in our `package.json:license` field.
